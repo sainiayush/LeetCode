@@ -1,0 +1,29 @@
+class MyCalendar {
+private:
+    map<int,int> eventMap;
+public:
+    MyCalendar() { }
+    
+    bool book(int start, int end) {
+        eventMap[start]++;
+        eventMap[end]--;
+        
+        int cnt{};
+        
+        for(auto it=eventMap.begin(); it!=eventMap.end(); ++it){
+            cnt += it->second;
+            if(cnt>1){
+                eventMap[start]--;
+                eventMap[end]++;
+                return false;
+            }
+        }
+        return true;
+    }
+};
+
+/**
+ * Your MyCalendar object will be instantiated and called as such:
+ * MyCalendar* obj = new MyCalendar();
+ * bool param_1 = obj->book(start,end);
+ */
