@@ -1,69 +1,49 @@
-const int N=1005;
-int n, par[N];
-
-int find(int x){
-    return x==par[x] ? x: par[x] = find(par[x]);
-}
-
-void unit(int x,int y){
-    x=find(x), y=find(y);
-    
-    if(x==y)
-        return ;
-    par[x]=y;
-}
-
-bool same(int x,int y){
-    return find(x)==find(y);
-}
-
 class Solution {
 public:
+    vector<int> father;
+    int fa(int a) {
+        return father[a] == a ? a : father[a] = fa(father[a]);
+    }
+    void merge(int a, int b) {
+        int aa = fa(a), bb = fa(b);
+        father[bb] = aa;
+    }
     vector<vector<string>> accountsMerge(vector<vector<string>>& accounts) {
-        n=accounts.size();
-        
-        for(int i=0;i<n;++i)
-            par[i]=i;
-        
-        for(int i=0;i<n;++i){
-            for(int j=0;j<i;++j){
-                if(!same(i,j)){
-                    for(int k=1;k<accounts[i].size();++k){
-                        for(int t=1;t<accounts[j].size();++t){
-                            if(accounts[i][k]==accounts[j][t]){
-                                unit(i,j);
-                                goto x;
-                            }
-                        }
-                    }
+        int n = accounts.size();
+        map<string, int> mp;
+        father.resize(n);
+        for (int i = 0; i < n; i++) {
+            father[i] = i;
+        }
+        for (int i = 0; i < n; i++) {
+            for (int j = 1; j < accounts[i].size(); j++) {
+                if (mp.find(accounts[i][j]) != mp.end()) {
+                    merge(fa(mp.at(accounts[i][j])), fa(i));
+                } else {
+                    mp[accounts[i][j]] = i;
                 }
-                x:;
             }
         }
-        
-        vector<set<string>> res;
-        res.resize(n);
-        
-        for(int i=0;i<n;++i){
-            par[i] = find(i);
-            
-            for(int j=1;j<accounts[i].size();++j){
-                res[par[i]].insert(accounts[i][j]);
+        for (int i = 0; i < n; i++) {
+            father[i] = fa(father[i]);
+        }
+        map<int, vector<string> > mres;
+        for (int i = 0; i < n; i++) {
+            for (int j = 1; j < accounts[i].size(); j++) {
+                mres[father[i]].push_back(accounts[i][j]);
             }
         }
-        
-        vector<vector<string>> ans;
-        
-        for(int i=0;i<n;++i){
-            if(par[i]==i){
-                vector<string> curr;
-                curr.push_back(accounts[i][0]);
-                
-                for(auto str: res[i])
-                    curr.push_back(str);
-                ans.emplace_back(curr);
+        vector<vector<string> > res;
+        for (auto item : mres) {
+            vector<string> subres;
+            subres.push_back(accounts[item.first][0]);
+            sort(item.second.begin(), item.second.end());
+            int cnt = unique(item.second.begin(), item.second.end()) - item.second.begin();
+            for (int i = 0; i < cnt; i++) {
+                subres.push_back(item.second[i]);
             }
+            res.push_back(subres);
         }
-        return ans;
+        return res;
     }
 };
