@@ -1,0 +1,40 @@
+class Solution {
+    string s1, s2;
+    int d[1010][1010];
+    int doit(int i,int j){
+        int ans, tmp;
+        
+        if(!i and !j)
+            return 0;
+        
+        if(d[i][j]!=-1)
+            return d[i][j];
+        
+        ans=2000000000;
+        
+        if(i>0){
+            tmp = doit(i-1, j);
+            if(tmp + s1[i-1] < ans)
+                ans=tmp+s1[i-1];
+        }
+        if(j>0){
+            tmp = doit(i, j-1);
+            if(tmp + s2[j-1] < ans)
+                ans=tmp+s2[j-1];
+        }
+        if(i>0 and j>0 and s1[i-1]==s2[j-1]){
+            tmp = doit(i-1, j-1);
+            if(tmp < ans)
+                ans=tmp;
+        }
+        
+        return d[i][j]=ans;
+    }
+public:
+    int minimumDeleteSum(string ss1, string ss2) {
+        s1=ss1, s2=ss2;
+        
+        memset(d, -1, sizeof d);
+        return doit(s1.size(), s2.size());
+    }
+};
