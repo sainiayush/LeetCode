@@ -1,0 +1,15 @@
+class Solution {
+public:
+    int dominantIndex(vector<int>& nums) {
+        int mxi = max_element(nums.begin(), nums.end()) - nums.begin();
+        int mxe = *max_element(nums.begin(), nums.end());
+        
+        for(int i=0;i<nums.size();++i){
+            if(nums[i]==mxe)
+                continue;
+            if(nums[i]*2 > mxe)
+                return -1;
+        }
+        return mxi;
+    }
+};
