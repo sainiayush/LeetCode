@@ -1,0 +1,40 @@
+class Solution {
+public:
+    int networkDelayTime(vector<vector<int>>& times, int n, int k) {
+        bool seen[105]={false};
+        vector<vector<pair<int,int>>> g(n+1);
+        for(auto it: times){
+            g[it[0]].emplace_back(it[1], it[2]);
+        }
+        const int inf = 1e9;
+        vector<int> d(n+1, inf);
+        d[k]=0;
+        queue<int> q;
+        q.push(k);
+        
+        while(!q.empty()){
+            k=q.front();
+            q.pop();
+            seen[k]=false;
+            
+            for(auto [node, times]: g[k]){
+                if(d[k]+times < d[node]){
+                    d[node]=d[k]+times;
+                    if(!seen[node]){
+                        seen[node]=true;
+                        q.push(node);
+                    }
+                }
+            }
+        }
+        
+        int ans=0;
+        for(int i=1; i<=n; ++i)
+            if(d[i]==inf)
+                return -1;
+            else 
+                ans=max(ans, d[i]);
+        
+        return ans;
+    }
+};
