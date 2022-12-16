@@ -1,0 +1,37 @@
+typedef long long ll;
+typedef vector<int> VI;
+typedef pair<int,int> PII;
+
+#define REP(i,s,t) for(int i=(s);i<(t);i++)
+#define FILL(x,v) memset(x,v,sizeof(x))
+
+const int INF = (int)1E9;
+#define MAXN 100005
+
+class Solution {
+public:
+  bool isLetter(char c) {
+    return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
+  }
+  char toLower(char c) {
+    if (c >= 'A' && c <= 'Z') return c - 'A' + 'a';
+    else return c;
+  }
+  string shortestCompletingWord(string p, vector<string>& w) {
+    int cntp[26] = {};
+    REP(i,0,p.size()) {
+      if (isLetter(p[i])) cntp[toLower(p[i]) - 'a']++;
+    }
+    string ans = "";
+    REP(i,0,w.size()) {
+      int cnt[26] = {};
+      REP(j,0,w[i].size()) cnt[toLower(w[i][j]) - 'a']++;
+      bool ok = true;
+      REP(c,0,26) if (cnt[c] < cntp[c]) ok = false;
+      if (ok) {
+        if (ans.size() == 0 || w[i].size() < ans.size()) ans = w[i];
+      }
+    }
+    return ans;
+  }
+};
