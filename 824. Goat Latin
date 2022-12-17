@@ -1,0 +1,35 @@
+class Solution {
+public:
+    string toGoatLatin(string sentence) {
+        stringstream ss(sentence);
+        
+        string str;
+        string ans;
+        
+        int i=1;
+        while(ss>>str){
+            
+            bool vowel=false;
+            for(char ch: "aeiouAEIOU"){
+                if(str[0]==ch){
+                    vowel=true;
+                    break;
+                }
+            }
+            if(vowel)
+                str += "ma";
+            else{
+                //cout<<str[0]<<"\n";
+                char ch=str[0];
+                str = str.substr(1) + ch;
+                str += "ma";
+            }
+            string temp = string(i,'a');
+            str += temp;
+            ++i;
+            ans += str + " ";
+        }
+        ans.pop_back();
+        return ans;
+    }
+};
