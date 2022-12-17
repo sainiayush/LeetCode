@@ -1,0 +1,22 @@
+class Solution {
+public:
+    int numFriendRequests(vector<int>& ages) {
+        int f[121]={};
+        for(int x: ages)
+            ++f[x];
+        
+        int ret{};
+        
+        for(int i=1;i<=120;++i)
+            for(int j=1;j<=120;++j){
+                if(2*j <= i+14 || j>i || (j>100 and i<100));
+                else{
+                    if(i==j)
+                        ret += f[i]*(f[i]-1);
+                    else
+                        ret += f[i]*f[j];
+                }
+            }
+        return ret;
+    }
+};
