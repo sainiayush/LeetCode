@@ -1,0 +1,26 @@
+template<class T>
+ostream& operator << (ostream& output, vector<T>& vec){
+  for(T& x: vec) output<<x<<" ";
+  return output;
+}
+class Solution {
+public:
+    string shiftingLetters(string s, vector<int>& shifts) {
+        int n=shifts.size();
+        int i=n-2;
+        
+        shifts[n-1] %= 26;
+        for(; ~i; --i){
+            shifts[i] += shifts[i+1];
+            shifts[i] %= 26;
+        }
+        
+        //cout<<shifts<<"\n";
+        for(int i=0;i<n;++i){
+            //cout<<(s[i]-'a'+shifts[i])%26 + 'a'<<'\n';
+            s[i] = char(((s[i]-'a'+shifts[i]) % 26) + 'a');
+        }
+        
+        return s;
+    }
+};
