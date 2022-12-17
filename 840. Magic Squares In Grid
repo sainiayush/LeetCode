@@ -1,0 +1,56 @@
+class Solution {
+public:
+    int numMagicSquaresInside(vector<vector<int>>& grid) {
+        ios::sync_with_stdio(0);
+        cin.tie(__null);
+        cout.tie(__null);
+        int ans{};
+        
+        int n=grid.size(), m=grid[0].size();
+        
+        for(int i=0;i<n-2;++i)
+            for(int j=0;j<n-2;++j){
+                vector<int> v;
+                //cout<<"hello";
+                int A[3][3];
+                for(int a=0; a<3;++a)
+                    for(int b=0; b<3; ++b){
+                        A[a][b] = grid[i+a][j+b];
+                        v.emplace_back(A[a][b]);
+                    }
+                
+                bool ok=true;
+                
+                for(int a=0;a<3;++a){
+                    int sum{};
+                    for(int b=0;b<3;++b)
+                        sum += A[a][b];
+                    ok = ok && (sum==15);
+                    if(!ok) goto o;
+                }
+                
+                for(int b=0;b<3;++b){
+                    int sum{};
+                    for(int a=0;a<3;++a)
+                        sum += A[a][b];
+                    ok = ok && (sum==15);
+                    if(!ok) goto o;
+                }
+                
+                ok = ok && (A[0][0] + A[1][1] + A[2][2] == 15);
+                ok = ok && (A[2][0] + A[1][1] + A[0][2] == 15);
+                if(!ok) goto o;
+                
+                sort(v.begin(), v.end());
+                
+                for(int t=0;t<9;++t){
+                    ok = ok && (v[t]==t+1);
+                    if(!ok) goto o;
+                } 
+                if(ok)
+                ++ans;
+                o:;
+            }
+        return ans;
+    }
+};
