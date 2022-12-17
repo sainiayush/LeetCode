@@ -1,0 +1,25 @@
+class Solution {
+public:
+    string maskPII(string s) {
+        if(s.find('@')!=string::npos){
+            transform(s.begin(), s.end(), s.begin(), ::tolower);
+            int pos = s.find('@');
+            string mask = s[0]+string(5,'*')+s.substr(pos-1);
+            //cout<<mask<<" ";
+            return mask;
+            //cout<<len;
+        }
+        string dig;
+        for(char c:s)
+            if(isdigit(c))
+                dig += c;
+        //cout<<dig;
+        int size=dig.size();
+        int diff = size-10;
+        string d;
+        for(int i=0;i<diff;++i)
+            d += '*';
+        //cout<<d;
+        return (size-10 > 0 ? "+" : "") + d + (size-10 > 0 ? "-" : "") + "***-***-"+dig.substr(size-4);
+    }
+};
