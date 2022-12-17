@@ -1,0 +1,24 @@
+class Solution {
+public:
+    int numMatchingSubseq(string s, vector<string>& words) {
+        vector<int> pos[26];
+        for(int i=0; i<s.size(); ++i)
+            pos[s[i]-'a'].push_back(i);
+        
+        int ans=0;
+        for(string& word: words){
+            int fail=0, p=0;
+            for(char ch: word){
+                int k = lower_bound(pos[ch-'a'].begin(), pos[ch-'a'].end(), p) - pos[ch-'a'].begin();
+                if(k == pos[ch-'a'].size()){
+                    fail=1;
+                    break;
+                }
+                p = pos[ch-'a'][k]+1;
+            }
+            if(!fail)
+                ++ans;
+        }
+        return ans;
+    }
+};
