@@ -1,0 +1,22 @@
+class Solution {
+    vector<vector<int>> ans;
+    vector<int> temp;
+    void DFS(int start,int end,vector<vector<int>> &g){
+        if(start==end){
+            ans.emplace_back(temp);
+            return;
+        }
+        for(int& edge: g[start]){
+            temp.emplace_back(edge);
+            DFS(edge, end, g);
+            temp.pop_back();
+        }
+    }
+public:
+    vector<vector<int>> allPathsSourceTarget(vector<vector<int>>& graph) {
+        int n = graph.size()-1;
+        temp.emplace_back(0);
+        DFS(0, n, graph);
+        return ans;
+    }
+};
