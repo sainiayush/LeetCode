@@ -1,0 +1,20 @@
+class Solution {
+public:
+    bool canVisitAllRooms(vector<vector<int>>& rooms) {
+        int N=rooms.size();
+        
+        vector<char> use(N);
+        vector<int> ord(1);
+        use[0]=true;
+        
+        for(int i=0; i<int(ord.size()); ++i){
+            int v=ord[i];
+            for(int &x: rooms[v])
+                if(!use[x]){
+                    use[x]=true;
+                    ord.emplace_back(x);
+                }
+        }
+        return ord.size()==N;
+    }
+};
