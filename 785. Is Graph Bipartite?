@@ -1,0 +1,35 @@
+class Solution {
+public:
+    bool isBipartite(vector<vector<int>>& adj) {
+        int n=adj.size();
+        vector<int> col(n,-1);
+        
+        function<bool(int)> checkBipartite = [&] (int node){
+            col[node]=1;
+            queue<int>q;
+            q.push(node);
+            
+            while(!q.empty()){
+                auto frt = q.front();
+                q.pop();
+                
+                for(auto &it: adj[frt]){
+                    if(col[it]==-1){
+                        col[it]=1-col[frt];
+                        q.push(it);
+                    }
+                    else if(col[it]==col[frt])
+                        return false;
+                }
+            }
+            return true;
+        };
+        
+        for(int i=0;i<n;++i)
+            if(col[i]==-1)
+                if(!checkBipartite(i))
+                    return false;
+        
+        return true;
+    }
+};
