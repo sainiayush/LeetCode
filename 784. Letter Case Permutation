@@ -1,0 +1,19 @@
+class Solution {
+public:
+    vector<string> letterCasePermutation(string s) {
+        set<string> temp;
+        recur(temp, s, 0);
+        return vector<string> (temp.begin(), temp.end());
+    }
+private:
+    void recur(set<string>& ss,string s,int p){
+        if(p==s.size()){
+            ss.insert(s);
+            return;
+        }
+        s[p]=tolower(s[p]);
+        recur(ss,s,p+1);
+        s[p]=toupper(s[p]);
+        recur(ss,s,p+1);
+    }
+};
