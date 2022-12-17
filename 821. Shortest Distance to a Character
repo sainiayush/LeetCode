@@ -1,0 +1,30 @@
+class Solution {
+public:
+    vector<int> shortestToChar(string s, char c) {
+        vector<int> ans;
+        
+        for(int i=0;i<s.size();++i){
+            int x;
+            if(s[i]==c)
+                x=0;
+            else if(!i){
+                x=s.find_first_of(c);
+                
+            }else if(i==s.size()-1){
+                x=i-s.find_last_of(c);
+            }else{
+                string l=s.substr(0,i), r=s.substr(i+1);
+                //cout<<l<<' '<<r<<'\n';
+                int lpos=l.find_last_of(c);
+                int rpos=s.find_first_of(c,i);
+                int lx=(lpos==string::npos) ? 1e5: i-lpos;
+                int rx=(rpos==string::npos) ? 1e5: rpos-i;
+                
+                //cout<<lx<<" "<<rx<<"\n";
+                x=min(lx, rx);
+            }
+            ans.emplace_back(abs(x));
+        }
+        return ans;
+    }
+};
