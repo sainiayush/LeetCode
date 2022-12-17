@@ -1,0 +1,17 @@
+class Solution {
+public:
+    vector<vector<int>> largeGroupPositions(string s) {
+        vector<vector<int>> ans;
+        
+        for(int i=0;i<s.size();++i){
+            int j=i;
+            while(j+1<s.size() and s[j]==s[j+1])
+                ++j;
+            //cout<<j-i+1<<'\n';
+            if(j-i+1 >= 3)
+                ans.emplace_back(vector<int>{i, j});
+            i=j;
+        }
+        return ans;
+    }
+};
