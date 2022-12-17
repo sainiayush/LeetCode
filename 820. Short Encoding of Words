@@ -1,0 +1,53 @@
+class Trie{
+public:
+    Trie* links[26];
+    Trie(){
+       fill(links, links+26, nullptr); 
+    }
+    void putNode(char ch){
+        links[ch-'a']=new Trie();
+    }
+    bool containsKey(char ch){
+        return links[ch-'a'] != nullptr;
+    }
+    Trie* getNode(char c){
+        return links[c-'a'];
+    }
+};
+class TrieNode{
+private: Trie* root;
+public:
+    TrieNode(){
+        root = new Trie();
+    }
+    void insert(int& cnt,string& Str){
+        Trie* node = root;
+        bool flag=false;
+        for(char c: Str){
+            if(!node->containsKey(c)){
+                flag=true;
+                node->putNode(c);
+            }
+            node = node->getNode(c);
+        }
+        if(flag)
+            cnt += Str.size()+1;
+    }
+};
+class Solution {
+public:
+    int minimumLengthEncoding(vector<string>& words) {
+        ios::sync_with_stdio(false);
+        cin.tie(nullptr);
+        sort(words.begin(), words.end(), [&] (string& a,string& b){
+            return a.size() > b.size();
+        });
+        TrieNode trie;
+        int cnt=0;
+        for(string word: words){
+            reverse(word.begin(), word.end());
+            trie.insert(cnt, word);
+        }
+        return cnt;
+    }
+};
