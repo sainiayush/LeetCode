@@ -1,0 +1,26 @@
+class Solution {
+    bool solveUtil(string& dst,string& src){
+        int i=0, j=0;
+        while(i < dst.size() && j<src.size()){
+            if(dst[i] != src[j])
+                return false;
+            int dstCnt=1, srcCnt=1; 
+            
+            while(i<dst.size() && dst[i]==dst[++i])
+                    dstCnt++;
+            while(j<src.size() && (src[j]==src[++j]))
+                    srcCnt++;
+            
+            if(srcCnt != dstCnt && (srcCnt > dstCnt || dstCnt < 3))
+                return false;
+        }
+        return i==dst.size() && j==src.size();
+    }
+public:
+    int expressiveWords(string s, vector<string>& words) {
+        int res=0;
+        for(string& word: words)
+            res += solveUtil(s, word);
+        return res;
+    }
+};
