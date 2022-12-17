@@ -1,0 +1,46 @@
+template<class T>
+ostream& operator << (ostream& o,vector<T>& v){
+    for(T&x: v)
+        o<<x<<' ';
+    return o;
+}
+class Solution {
+public:
+    string mostCommonWord(string paragraph, vector<string>& banned) {
+        set<string> st(banned.begin(), banned.end());
+        
+        stringstream ss(paragraph);
+        
+        string s;
+        string ans;
+        int mx=0;
+        map<string,int> mpp;
+        while(ss>>s){
+            //cout << s << endl;
+            stringstream sss(s);
+            string str;
+            
+            vector<string> sm;
+            while(getline(sss,str,',')){
+                sm.emplace_back(str);
+            }
+            for(auto &it: sm){
+                string m;
+                transform(it.begin(), it.end(), it.begin(), ::tolower);
+                for(char ch: it){
+                    if(ch>='a' and ch<='z')
+                        m += ch;
+                }
+                if(st.count(m))
+                    continue;
+                //cout<<m<<'\n';
+                mpp[m]++;
+                if(mpp[m] > mx){
+                    mx=mpp[m];
+                    ans=m;
+                }
+            }
+        }
+        return ans;
+    }
+};
