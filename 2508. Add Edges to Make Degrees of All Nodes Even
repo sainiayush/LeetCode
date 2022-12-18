@@ -1,0 +1,30 @@
+class Solution {
+public:
+    bool isPossible(int n, vector<vector<int>>& edges) {
+        vector<unordered_set<int>> g(n);
+        for(vector<int>& it: edges){
+            g[it[0]-1].insert(it[1]-1);
+            g[it[1]-1].insert(it[0]-1);
+        }
+        vector<int> odd;
+        for(int i=0; i<n; ++i)
+            if(g[i].size() & 1)
+                odd.emplace_back(i);
+        
+        if(odd.size()==0)
+            return true;
+        if(odd.size()==2){
+            for(auto &gg: g)
+                if(!gg.count(odd[0]) && !gg.count(odd[1]))
+                    return true;
+            return false;
+        }
+        if(odd.size()==4){
+            int a=odd[0], b=odd[1] ,c=odd[2], d=odd[3];
+            if((!g[a].count(b) && !g[c].count(d)) || (!g[a].count(c) && !g[b].count(d)) || (!g[a].count(d) && !g[b].count(c)))
+                return true;
+            return false;
+        }
+        return false;
+    }
+};
