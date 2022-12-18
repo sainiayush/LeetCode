@@ -1,0 +1,19 @@
+class Solution {
+public:
+    int smallestValue(int n) {
+        auto fn= [&] (int n){
+            int ans=0;
+            for(int f=2; f <=n; ++f)
+                for(; n%f==0; n/=f)
+                    ans += f;
+            return ans;
+        };
+        while(true){
+            int nn=fn(n);
+            if(nn==n)
+                return n;
+            n=nn;
+        }
+        return 0;
+    }
+};
