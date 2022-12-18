@@ -1,0 +1,24 @@
+class Solution {
+public:
+    vector<int> cycleLengthQueries(int n, vector<vector<int>>& queries) {
+        ios::sync_with_stdio(false);
+        cin.tie(nullptr);
+        vector<int> ans;
+        for(auto it: queries){
+            int a=it[0], b=it[1];
+            int c=1;
+            while(a != b){
+                if(a>b){
+                    a >>= 1;
+                    ++c;
+                }
+                else{
+                    b >>= 1;
+                    ++c;
+                }
+            }
+            ans.emplace_back(c);
+        }
+        return ans;
+    }
+};
