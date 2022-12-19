@@ -1,0 +1,28 @@
+class Solution {
+public:
+    vector<string> uncommonFromSentences(string s1, string s2) {
+        map<string,int> mpp1,mpp2;
+        
+        string w;
+        stringstream s(s1);
+        
+        while(s>>w)
+            mpp1[w]++;
+        
+        stringstream ss(s2);
+        
+        while(ss>>w)
+            mpp2[w]++;
+        
+        vector<string> ans;
+        
+        for(auto [x,y]: mpp1)
+            if(y==1 and !mpp2.count(x))
+                ans.emplace_back(x);
+        for(auto [x,y]: mpp2)
+            if(y==1 and !mpp1.count(x))
+                ans.emplace_back(x);
+        
+        return ans;
+    }
+};
