@@ -1,0 +1,25 @@
+class Solution {
+public:
+    std::vector<std::string> findAndReplacePattern(const std::vector<std::string>& words, const std::string pattern) {
+        std::vector<string>res;
+        
+        std::string norm = normalize(pattern);
+        for(const std::string& w: words)
+            if(normalize(w)==norm)
+                res.emplace_back(w);
+        return res;
+    }
+private:
+    std::string normalize(std::string w){
+        map<char,int>mpp;
+        
+        for(char &ch: w)
+            if(!mpp.count(ch))
+                mpp[ch]=mpp.size();
+        
+        for(int i=0;i<w.size();++i)
+            w[i]='a'+mpp[w[i]];
+        
+        return w;
+    }
+};
