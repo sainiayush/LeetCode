@@ -1,0 +1,27 @@
+class Solution {
+    int dir[4][2]={{0,1},{1,0},{0,-1},{-1,0}};
+    bool isValid(int r,int c,int n,int m){
+        return 0<=r && 0<=c && n>r && m>c;
+    }
+public:
+    vector<vector<int>> spiralMatrixIII(int rows, int cols, int rStart, int cStart) {
+        vector<vector<int>> res;
+        int len{}, d{};
+        
+        res.emplace_back(vector<int>({rStart, cStart}));
+        while(res.size() < rows*cols){
+            if(!d || d==2) 
+                ++len;
+            
+            for(int i=0;i<len;++i){
+                rStart += dir[d][0];
+                cStart += dir[d][1];
+                
+                if(isValid(rStart, cStart, rows, cols))
+                    res.emplace_back(vector<int>({rStart, cStart}));
+            }
+            d=(d+1)%4;
+        }
+        return res;
+    }
+};
