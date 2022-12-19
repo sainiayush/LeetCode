@@ -1,0 +1,75 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+private:
+    unordered_map<TreeNode*, TreeNode*> parent_tracker;
+public:
+    vector<int> distanceK(TreeNode* root, TreeNode* target, int k) {
+        ios::sync_with_stdio(false);
+        cin.tie(nullptr);
+        markParents(root);
+        unordered_map<TreeNode*, bool> vis;
+        int curr_level = 0;
+        
+        queue<TreeNode*> q;
+        q.push(target);
+        
+        vis[target]=true;
+        while(!q.empty()){
+            if(curr_level++==k)
+                break;
+            int sz = q.size();
+            while(sz--){
+                TreeNode* curr = q.front();
+                q.pop();
+                
+                if(curr->left && !vis[curr->left]){
+                    vis[curr->left]=true;
+                    q.emplace(curr->left);
+                }
+                if(curr->right && !vis[curr->right]){
+                    vis[curr->right]=true;
+                    q.emplace(curr->right);
+                }
+                if(parent_tracker[curr] && !vis[parent_tracker[curr]]){
+                    vis[parent_tracker[curr]]=true;
+                    q.emplace(parent_tracker[curr]);
+                }
+            }
+        }
+        
+        vector<int> ans;
+        while(!q.empty()){
+            ans.emplace_back(q.front()->val);
+            q.pop();
+        }
+        return ans;
+    }
+private:
+    void markParents(TreeNode* root){
+        TreeNode* node = root;
+        queue<TreeNode*> q;
+        q.emplace(root);
+        
+        while(!q.empty()){
+                node = q.front();
+                q.pop();
+                
+                if(node->left){
+                    parent_tracker[node->left]=node;
+                    q.emplace(node->left);
+                }
+                if(node->right){
+                    parent_tracker[node->right]=node;
+                    q.emplace(node->right);
+                }
+        }
+    }
+};
