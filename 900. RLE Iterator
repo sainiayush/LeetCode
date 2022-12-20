@@ -1,0 +1,28 @@
+class RLEIterator {
+    vector<int> seq;
+    int currInd{};
+public:
+    RLEIterator(vector<int>& encoding) {
+        seq=encoding;
+    }
+    
+    int next(int n) {
+        while(currInd < seq.size()){
+            if(seq[currInd]>=n){
+                seq[currInd]-=n;
+                return seq[currInd+1];
+            }
+            else{
+                n -= seq[currInd];
+                currInd += 2;
+            }
+        }
+        return -1;
+    }
+};
+
+/**
+ * Your RLEIterator object will be instantiated and called as such:
+ * RLEIterator* obj = new RLEIterator(encoding);
+ * int param_1 = obj->next(n);
+ */
