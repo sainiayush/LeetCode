@@ -1,0 +1,9 @@
+class Solution {
+public:
+    int smallestRangeI(vector<int>& nums, int k) {
+        sort(nums.begin(), nums.end());
+        if(nums.back() - nums.front() <= 2*k)
+            return 0;
+        return nums.back() - nums.front() - 2*k;
+    }
+};
