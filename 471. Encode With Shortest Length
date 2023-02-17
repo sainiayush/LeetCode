@@ -1,0 +1,31 @@
+string encode(string s){
+  const int n = len(s);
+  vector<vector<string>> dp(n, vector<string>(n));
+
+  for(int d=0; d<n; ++d)
+    for(int i=0; i+d < n; ++i){
+      const int j=i+d;
+
+      const string& curr = s.substr(i, j-i+1);
+      dp[i][j]=curr;
+
+      if(len(dp[i][j]) < 5)
+        continue;
+
+      //Try all possible partitions
+      for(int k=i; k<j; ++k)
+        if(len(dp[i][k]) + len(dp[k+1][j]) < len(dp[i][j]))
+          dp[i][j] = dp[i][k] + dp[k+1][j];
+
+      //Try to compress the STRING
+      for(int k=i; k<=j; ++k){
+        const string& pattern = s.substr(i, k-i+1);
+        if(len(curr) % len(pattern) == 0 && regex_replace(curr, regex(pattern), "").empty()){
+          const string& candidate = to_string(len(curr) / len(pattern)) + '[' + dp[i][k] + ']';
+          if(len(candidate) < len(dp[i][j]))
+            dp[i][j]=candidate;
+        }
+      }
+    }
+    return dp[0][n-1];
+}
