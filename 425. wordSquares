@@ -1,0 +1,101 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define size(container) static_cast<int>(container.size())
+
+struct TrieNode{
+  vector<shared_ptr<TrieNode>> children;
+  vector<const string*> startsWith;
+  TrieNode() : children(26) {}
+};
+
+class Trie{
+public:
+  Trie(const vector<string>& words){
+    for(const string& word: words)
+      insert(word);
+  }
+
+  vector<const string*> findByPrefix(const string& prefix){
+    shared_ptr<TrieNode> node = root;
+    for(const char& c: prefix){
+      int index = c - 'a';
+      if(node->children[index] == nullptr)
+        return {};
+      node = node->children[index];
+    }
+    return node->startsWith;
+  }
+
+private:
+  shared_ptr<TrieNode> root = make_shared<TrieNode>();
+  inline void insert(const string& word){
+    shared_ptr<TrieNode> node = root;
+    for(const char& c: word){
+      const int index = c - 'a';
+      if(node->children[index] == nullptr)
+        node->children[index] = make_shared<TrieNode>();
+      node = node->children[index];
+      node->startsWith.emplace_back(&word);
+    }
+  }
+};
+class Solution{
+public:
+  vector<vector<string>> wordSquares(vector<string>& words){
+    if(words.empty())
+      return {};
+    
+    const int n = size(words[0]);
+    vector<vector<string>> ans;
+    vector<string> path;
+    Trie trie(words);
+
+    for(const string& word: words){
+      path.emplace_back(word);
+      dfs(trie, n, path, ans);
+      path.pop_back();
+    }
+    return ans;
+  }
+
+private:
+  inline void dfs(Trie& trie, const int& n, vector<string>& path, vector<vector<string>>& ans){
+    if(size(path) == n){
+      ans.emplace_back(path);
+      return;
+    }
+
+    const string& prefix = getPrefix(path);
+
+    for(const string* s: trie.findByPrefix(prefix)){
+      path.push_back(*s);
+      dfs(trie, n, path, ans);
+      path.pop_back();
+    }
+  }
+
+  inline string getPrefix(const vector<string>& path){
+    string prefix;
+    const int index = size(path);
+    for (const string& s : path)
+      prefix += s[index];
+    return prefix;
+  }
+};
+int main(){
+  int n;
+  cin >> n;
+
+  vector<string> words(n);
+  for(string& s: words) cin >> s;
+
+  Solution solution;
+  auto ans = solution.wordSquares(words);
+  for(int i=0; i<size(ans); ++i){
+    cout << "[\n";
+    for(const string& words: ans[i])
+      cout << words << "\n";
+    cout << "]\n";
+  }
+  return 0;
+}
