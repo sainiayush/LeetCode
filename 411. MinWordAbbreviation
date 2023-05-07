@@ -1,0 +1,97 @@
+#include<bits/stdc++.h>
+using namespace std;
+class Solution{
+public:
+  string minAbbreviation(const string& target, const vector<string>& dictionary){
+    const int n = size(target);
+    
+    vector<int> masks;
+    for(const string& d: dictionary){
+      if(size(d) != n) continue;
+      masks.emplace_back(getMask(target, d));
+    }
+
+    if(masks.empty()) 
+      return to_string(n);
+    
+    int totalComb = 1 << n;
+
+    vector<string> abbrs;
+    for(int cand = 0; cand < totalComb; ++cand){
+      if(all_of(begin(masks), end(masks), [&] (int mask){
+        return mask & cand;
+      }))
+        abbrs.emplace_back(getAbbr(target, cand));
+    }
+
+    string ans = target;
+    for(const string& abbr: abbrs)
+      if(abbrLen(abbr) < abbrLen(ans))
+        ans = abbr;
+    
+    return ans;
+  }
+private:
+  inline int getMask(const string& target, const string& word){
+    int mask = 0;
+    const int n = size(target);
+    for(int i = 0; i < n ;++i)
+      if(target[i] != word[i])
+        mask |= 1 << n - i - 1;
+    
+    return mask;
+  }
+  inline string getAbbr(const string& target, const int& cand){
+    int replaceCount = 0;
+    const int n = size(target);
+
+    string ret = "";
+    for(int i=0; i<n; ++i)
+      if(cand >> n - i - 1 & 1){
+        if(replaceCount > 0)
+          ret += to_string(replaceCount);
+        ret += target[i];
+        replaceCount = 0;
+      }
+      else
+        replaceCount++;
+    
+    if(replaceCount > 0)
+      ret += to_string(replaceCount);
+    
+    return ret;
+  }
+
+  int abbrLen(const string& abbr){
+    int i=0, j=0;
+    const int n = size(abbr);
+
+    int abbrLen = 0;
+    while(i < n){
+      if(isalpha(abbr[j]))
+        ++j;
+      else{
+        while(j < n && isdigit(abbr[j]))
+          ++j;
+      }
+      ++abbrLen;
+      i = j;
+    }
+    return abbrLen;
+  }
+};
+
+int main(){
+  string s;
+  cin >> s;
+
+  int n;
+  cin >> n;
+
+  vector<string> dictionary(n);
+  for(string& d: dictionary) cin >> d;
+
+  Solution sol;
+  cout << sol.minAbbreviation(s, dictionary);
+  return 0;
+}
