@@ -1,0 +1,47 @@
+struct TrieNode{
+  unordered_map<string, shared_ptr<TrieNode>> children;
+  int value;
+  TrieNode(int val) : value(val) {}
+};
+class FileSystem{
+public:
+  bool createPath(const string& path, int val){
+    const vector<string> subpaths = getSubPaths(path);
+
+    shared_ptr<TrieNode> node = root;
+    for(int i=0; i<size(subpaths) - 1; ++i){
+      auto it = node->children.find(subpaths[i]);
+      if(it == end(node->children))
+        return false;
+      node = it->second;
+    }
+
+    if(node->children.count(subpaths.back()))
+      return false;
+    node->children[subpaths.back()] = make_shared<TrieNode>(val);
+    return true;
+  }
+  int get(const string& path){
+    const vector<string> subpaths = getSubPaths(path);
+    shared_ptr<TrieNode> node = root;
+
+    for(const string& subpath : subpaths){
+      auto it = node->children.find(subpath);
+      if(it == end(node->children))
+        return -1;
+      node = it->second;
+    }
+    return node->value;
+  }
+private:
+shared_ptr<TrieNode> root = make_shared<TrieNode>(0);
+  vector<string> getSubPaths(const string& path){
+    stringstream ss(path);
+    vector<string> subpaths;
+    for(string subpath; getline(ss, subpath, '/'); )
+      if(!subpath.empty())
+        subpaths.emplace_back(subpath);
+    
+    return subpaths;
+  }
+};
