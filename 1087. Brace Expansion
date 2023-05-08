@@ -1,0 +1,36 @@
+class Solution{
+public:
+  vector<string> expand(const string& s){
+    vector<string> ans;
+    string path;
+    dfs(s, 0, path, ans);
+    return ans;
+  }
+private:
+  inline void dfs(const string& s, int index, string& path, vector<string>& ans){
+    if(index == size(s)){
+      ans.emplace_back(path);
+      return;
+    }
+    if(s[index] == '{'){
+      int nextIndex = s.find('}', index + 1);
+      for(const char& c: split(s.substr(index + 1, nextIndex - index - 1), ',')){
+        path.push_back(c);
+        dfs(s, nextIndex + 1, path, ans);
+        path.pop_back();
+      }
+    }
+    else{
+      path.push_back(s[index]);
+      dfs(s, index + 1, path, ans);
+      path.pop_back();
+    }
+  }
+  inline vector<char> split(const string& s, char delimeter){
+    vector<char> splitted;
+    for(const char& c: s)
+      if(c != delimeter)
+        splitted.emplace_back(c);
+    return splitted;
+  }
+};
