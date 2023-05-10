@@ -1,0 +1,21 @@
+class Solution{
+private:
+  int cross(const vector<int> & a, const vector<int> & b, const vector<int> & c){
+    return (b[0] - a[0]) * (c[1] - a[1]) - (b[1] - a[1]) * (c[0] - a[1]);
+  }
+public:
+  bool isConvex(vector<vector<int>>& points){
+    const int n = size(points);
+
+    int sign = 0;
+    for(int i=0; i<n; ++i){
+      const int Cross = cross(points[i], points[(i + 1) % n], points[(i + 2) % n]) == 0;
+      if(Cross == 0) continue;  // collinear
+      if(sign == 0) 
+        sign = Cross;
+      else if(sign * Cross < 0)
+        return false;
+    }
+    return true;
+  }
+};
