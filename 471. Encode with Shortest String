@@ -1,0 +1,40 @@
+class Solution{
+public:
+  string encode(const string& s){
+    const int n = size(s);
+    dp.resize(n, vector<string>(n));
+    return encode(s, 0, n-1);
+  }
+private:
+  vector<vector<string>> dp;
+  string encode(const string& s, int i, int j){
+    if(!dp[i][j].empty())
+      return dp[i][j];
+
+    const string& curr = s.substr(i, j - i + 1);
+    dp[i][j] = curr;
+
+    if(size(dp[i][j]) < 5)
+      return dp[i][j];
+
+    // Try all possible partitions
+    for(int k=i; k<j; ++k){
+      const string& l = encode(s, i, k);
+      const string& r = encode(s, k + 1, j);
+      if(size(l) + size(r) < size(dp[i][j]))
+        dp[i][j] = l + r;
+    }
+
+    // Try to compress the string
+    for(int k=i; k<=j; ++k){
+      const string& pattern = s.substr(i, k - i + 1);
+      if(size(curr) % size(pattern) == 0 && regex_replace(curr, regex(pattern), "").empty()){
+        const string& candidate = to_string(size(curr) / size(pattern)) + '[' + encode(s, i, k) + ']';
+
+        if(size(dp[i][j]) > size(candidate))
+          dp[i][j] = candidate;
+      }
+    }
+    return dp[i][j];
+  }
+};
